@@ -79,6 +79,7 @@ static stream_format_t *stream_formats[] = {
   &snappy_java_format,
   &snappy_in_java_format,
   &comment_43_format,
+  &snappy_framed_format,
 };
 #define NUM_OF_STREAM_FORMATS (sizeof(stream_formats)/sizeof(stream_formats[0]))
 
@@ -113,7 +114,7 @@ static stream_format_t *find_stream_format_by_first_byte(FILE *fp)
     return NULL;
   }
   ungetc(c, fp);
-
+  // TODO: check the full matgic string
   for (idx = 0; idx < NUM_OF_STREAM_FORMATS; idx++) {
     if ((int)stream_formats[idx]->first_byte == c) {
       return stream_formats[idx];
@@ -160,7 +161,7 @@ int main(int argc, char **argv)
   size_t rsize = 0;
   size_t wsize = 0;
   const char *format_name = NULL;
-  stream_format_t *fmt = &snzip_format;
+  stream_format_t *fmt = &snappy_framed_format;
 
   char *progname = strrchr(argv[0], PATH_DELIMITER);
   if (progname != NULL) {
